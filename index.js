@@ -1,158 +1,126 @@
-window.onload = function() {init()};
+// Run the script below when window loads.
+init();
 
 function init() {
 	
-	// mapboxgl.accessToken = 'pk.eyJ1IjoianVsY29ueiIsImEiOiJja2N0NGU3eGkwZGtqMnJxbGM0dXM4am50In0.mlekGyVVwR95ATKGkcISOg';
-	// var map = new mapboxgl.Map({
-	//   container: 'map',
-	//   style: 'mapbox://styles/mapbox/streets-v11',
-	//   center: [-99.93, 54.32],
-	//   zoom: 4,
-	//   maxZoom: 10,
-	//   minZoom: 3
-	//   // hash: true,
-	//   // maxBounds: [-168.39312,40.713956,-50.971241,83.359511]
-	// });
+	// Initialize value for embedded Excel document.
+	var ewa = null;
+
+	// Add event handler for onload event.
+	if (window.attachEvent) { 
+			window.attachEvent("onload", ewaOnPageLoad);    
+	} else { 
+			window.addEventListener("DOMContentLoaded", ewaOnPageLoad, false); 
+	}
 	
-	// map.on('load', function(){
-	// 	// load map
-	// 	// renderMap(features);
-	// })
+	// Add event handler for applicationReady event.
+	function ewaOnPageLoad() {
+			if (typeof (Ewa) != "undefined") {
+				Ewa.EwaControl.add_applicationReady(ewaApplicationReady);
+			} else {
+				alert("Error - the EWA is not loaded.");
+			}
+	}
+
+	function ewaApplicationReady() {
+			// Get a reference to the Excel Services web part.
+			ewa = Ewa.EwaControl.getInstances().getItem(0);
+			getData();
+	}
+	
+	function getData() {    
+		// Get range for entire Data sheet
+		// TO DO: FIGURE OUT HOW TO GET THE ROW LENGTH SHOULD NOT HARD CODE (JULIA)
+		// var rows = ewa.getActiveWorkbook().getActiveSheet().getRowCount();
+		// console.log(rows);
+		var range = ewa.getActiveWorkbook().getActiveSheet().getRange(1,0,4,13);
+		
+		// Get values from range.
+		range.getValuesAsync(0,buildMap,range);
+	}
+	
+	function buildMap(asyncResult) {
+			// Get the value from asyncResult if the asynchronous operation was successful.
+			if (asyncResult.getCode() == 0) {
+				
+				// Get the array of range values from asyncResult.
+				var values = asyncResult.getReturnValue(),
+						features = [];
+				
+				// Loop through the array of range values and prepare each row into a feature. Each feature will then be added to an array of features that will be added into the map as a data source.
+				for (var i = 0; i < values.length; i++) {
+					 // TO DO: ADD OTHER DATA TO FEATURE FOR MAP (MELISSA)
+					 // Essentially add additional keys and values to the "properties" object. 
+					 // The following must be the structure of the object: "Column Name / Whatever you want to call it / Text to appear on the Map":"'+values[i][enter column number starting at 0 as column #1]+'".
+					 var feature = '{"type": "Feature","properties": {"Timestamp": "'+values[i][0]+'", "O3_V": "'+values[i][7]+'"},"geometry": {"type": "Point","coordinates": ['+values[i][12]+','+values[i][11]+']}}';
+					 features.push(JSON.parse(feature));
+				}
+				
+				// Create a map. Will have to add an accessToken that is specific for this project.
+				// TO DO: FIGURE OUT MAP TOKEN (JULIA)
+				mapboxgl.accessToken = 'pk.eyJ1IjoianVsY29ueiIsImEiOiJja2N0NGU3eGkwZGtqMnJxbGM0dXM4am50In0.mlekGyVVwR95ATKGkcISOg';
+				var map = new mapboxgl.Map({
+					container: 'map',
+					style: 'mapbox://styles/mapbox/streets-v11',
+					center: [-75.7046,45.4705],
+					zoom: 4,
+					maxZoom: 14,
+					minZoom: 12,
+					hash: true,
+					maxBounds: [-168.39312,40.713956,-50.971241,83.359511] // TO DO: UPDATE THIS WITH JUST OTTAWA BOUNDS, NOT CANADA (JULIA/MELISSA)
+				});
+				
+				map.on('load', function(){
+					
+					// Create data source to store the features that were collected from the Excel spreadsheet.
+					map.addSource('data', {
+						'type': 'geojson',
+						'data': {
+							'type': 'FeatureCollection',
+							'features': features
+						}
+					});
+					
+					// Add a new map layer from the above data source. This layer represents the sites.
+					map.addLayer({
+							'id': 'sites',
+							'type': 'circle',
+							'source': 'data',
+							'paint': { // TO DO: ADD LOGIC TO MAKE POINTS COLOURED BASED ON A VALUE. TO BE DISCUSSED B/W MELISSA AND JULIA.
+							'circle-radius': 10,
+							'circle-color': '#007cbf'
+							}
+						});
+				});
+				
+				// Initialize a popup for the map.
+				var popup = new mapboxgl.Popup({
+		        closeButton: false,
+		        closeOnClick: false
+		    });
+
+				// Create hover events so that when a user hover's over point (mouseenter), the popup appears.
+				map.on('mouseenter', 'sites', function(e) {
+					var text;
+					map.getCanvas().style.cursor = 'pointer';
+				
+					// Set popup text.
+					text = '<h2>' + e.features[0].properties.Timestamp + '</h2><h3>O3 (Volume)' + e.features[0].properties.O3_V + '</h3>';
+
+					// Populate popup content.
+					popup.setLngLat(e.features[0].geometry.coordinates)
+						.setHTML(text)
+						.addTo(map);
+				});
+				
+				// And when a user leaves a point (mouseleave), the popup disappears.
+				map.on('mouseleave', 'sites', function(e) {
+					map.getCanvas().style.cursor = '';
+					popup.remove();
+				});
+				
+			} else {
+				alert('Operation failed with error message ' + asyncResult.getDescription() + '.');
+			}    
+	}
 }
-
-var features = [];
-var years = [];
-
-// function showInfo(data) { // function to show data from Google Sheet
-// 
-// 	var places = []; 
-// 
-// 	data.forEach(function(data) {
-// 		if (data.community){	
-// 			places.push(data.community)
-// 		}
-// 	});
-// 
-// 	function join_tables(gov_fn, data){
-// 		for (var i in data) {
-// 			for (var j in gov_fn){
-// 				if (data[i].first_nation == gov_fn[j].BAND_NAME) {
-// 					data[i].coordinates = [Number(gov_fn[j].LONGITUDE)] 
-// 					data[i].coordinates.push(Number(gov_fn[j].LATITUDE))
-// 				}
-// 			}
-// 		}
-// 		return data;
-// 	}
-// 
-// 	// filter by time
-// 	function filterBy(year, total){
-// 		var filters = ['<=', 'year', year];
-// 		map.setFilter('water-advisories', filters);
-// 		document.getElementById('year').textContent = 'Recorded advisories since ' + year;
-// 		if (total == 1) {
-// 			document.getElementById('stats').innerHTML = total + ' advisory in ' + year;
-// 		} else {
-// 			document.getElementById('stats').innerHTML = total + ' advisories in ' + year;
-// 		}
-// 	}
-// 
-// 	// render map
-// 	function renderMap(features) {
-// 
-// 		// add data as a geojson source
-// 		map.addSource('markers', {
-// 			type: 'geojson',
-// 			data: {
-// 				'type': 'FeatureCollection',
-// 				'features': features
-// 			}
-// 		});
-// 
-// 		// make labels on top of new layer
-// 		var labels,
-// 			layers = map.getStyle().layers;
-// 
-// 	    for (var i = 0; i < layers.length; i++) {
-// 	        if (layers[i].type === 'symbol') {
-// 	            labels = layers[i].id;
-// 	            break;
-// 	        }
-// 	    }
-// 
-// 		// add sites data as a layer
-// 		map.addLayer({
-// 			id: 'sites',
-// 			type: 'circle',
-// 			source: 'markers',
-// 			paint: {
-// 				'circle-stroke-color': {
-// 					property: 'date_revoked',
-// 					default: '#1494A8',
-// 					type: 'categorical',
-// 					stops: [
-// 						['None', '#e04763'],
-// 					]
-// 				},
-// 				'circle-color': {
-// 					property: 'advisory_type',
-// 					type: 'categorical',
-// 					default: '#e04763',
-// 					stops: [
-// 						['BWA', '#C6BDB0'],
-// 						['DNC', '#635F58'],
-// 						['BWO', '#C6BDB0']
-// 					]
-// 				},
-// 				'circle-stroke-width': {
-// 					property: 'advisory_type',
-// 					type: 'categorical',
-// 					default: 3,
-// 					stops: [
-// 						['BWA', 3],
-// 						['DNC', 3]
-// 					]
-// 				}
-// 			}
-// 		}, labels);
-// 
-// 		// initial filter
-// 		filterBy(years[0], 1);
-// 
-// 		// create popup
-// 		var popup = new mapboxgl.Popup({
-// 	        closeButton: false,
-// 	        closeOnClick: false
-// 	    });
-// 
-// 		// hover events for popup
-// 		map.on('mouseenter', 'sites', function(e) {
-// 			var text;
-// 			map.getCanvas().style.cursor = 'pointer';
-// 
-// 			// set popup text
-// 			text = '<h2>' + e.features[0].properties.description + '</h2><h3>Date Set: ' + e.features[0].properties.date_set + '<br>Date Revoked: ' + e.features[0].properties.date_revoked + '</h3>';
-// 
-// 			// populate popup content
-// 			popup.setLngLat(e.features[0].geometry.coordinates)
-// 				.setHTML(text)
-// 				.addTo(map);
-// 		});
-// 
-// 		map.on('mouseleave', 'sites', function(e) {
-// 			map.getCanvas().style.cursor = '';
-// 			popup.remove();
-// 		});
-// 
-// 		// when time slider is moved filter the data
-//         document.getElementById('slider').addEventListener('input', function(e) {
-//             var total = 0;
-//             features.forEach(function(feature) {
-//             	if (feature.properties.year == years[e.target.value]){
-//             		total +=  1;
-//             	}
-//             });
-//             filterBy(years[e.target.value], total);
-//         });
-// 	}
-// }
