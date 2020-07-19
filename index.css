@@ -1,0 +1,136 @@
+@import url(https://fonts.googleapis.com/css?family=Lato|Open+Sans);
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%; }
+
+.link {
+  text-decoration: none;
+  color: #e04763;
+  font-weight: bold; }
+  .link:hover {
+    text-decoration: underline;
+    cursor: pointer; }
+
+.foot {
+  font-size: 11px;
+  font-weight: bold;
+  width: 100%;
+  text-align: center;
+  padding-top: 20px; }
+
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%; }
+
+.map-overlay-inner {
+  background-color: #F1F1F0;
+  border: 1px solid #e04763;
+  padding: 15px;
+  margin: 10px;
+  border-radius: 10px; }
+
+.map-overlay {
+  color: #252726;
+  position: absolute;
+  width: 50%;
+  top: 0;
+  left: 0;
+  height: 40%; }
+  .map-overlay h2 {
+    font-family: "Open Sans", sans-serif;
+    line-height: 24px;
+    display: block;
+    margin: 0 0 10px; }
+  .map-overlay h3, .map-overlay p {
+    font-family: "Lato", sans-serif; }
+  .map-overlay label {
+    color: #e04763; }
+  .map-overlay input {
+    background-color: transparent;
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    margin: 0;
+    cursor: ew-resize; }
+
+.mapboxgl-popup-content {
+  font-family: "Lato", sans-serif;
+  color: #252726;
+  border-left: 3px solid #252726;
+  border-right: 3px solid #252726;
+  text-align: center; }
+  .mapboxgl-popup-content .mapboxgl-popup-close-button {
+    color: #e04763; }
+
+.legend {
+  margin-bottom: 0px;
+  display:inline-block;
+  padding: 0px;
+  font-family: "Open Sans", sans-serif; }
+  .legend h3 {
+    display: inline-block;
+    margin: 10px 5px; }
+  .legend li {
+    display: inline-block;
+    font-size: 14px; }
+  .legend span {
+    border-radius: 50%;
+    display: inline-block;
+    height: 13px;
+    margin: 0px 5px;
+    width: 13px; }
+
+input {
+  display: inline-block;
+  width: 100%;
+  position: relative;
+  margin: 0;
+  cursor: ew-resize;
+  background: transparent; }
+
+input[type=range] {
+  -webkit-appearance: none; }
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; }
+
+input[type=range]::-ms-track {
+  width: 100%;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent; }
+
+input[type=range] {
+  border-radius: 15px;
+  height: 10px;
+  border: 1px solid #252726; }
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: 1px solid #252726;
+  height: 25px;
+  width: 16px;
+  border-radius: 15px;
+  background: #252726;
+  cursor: pointer; }
+
+input[type=range]::-moz-accent-thumb {
+  border: 1px solid #252726;
+  height: 25px;
+  width: 16px;
+  border-radius: 15px;
+  background: #252726;
+  cursor: pointer; }
+
+input[type=range]::-ms-thumb {
+  border: 1px solid #252726;
+  height: 25px;
+  width: 16px;
+  border-radius: 15px;
+  background: #252726;
+  cursor: pointer; }
