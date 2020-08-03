@@ -53,7 +53,7 @@ function init() {
 					 // TO DO: ADD OTHER DATA TO FEATURE FOR MAP (MELISSA)
 					 // Essentially add additional keys and values to the "properties" object. 
 					 // The following must be the structure of the object: "Column Name / Whatever you want to call it / Text to appear on the Map":"'+values[i][enter column number starting at 0 as column #1]+'".
-					 var feature = '{"type": "Feature","properties": {"Time": "' + new Date(values[i][0]) + '", "Quality": "'+values[i][18]+'"},"geometry": {"type": "Point","coordinates": ['+values[i][12]+','+values[i][11]+']}}';
+					 var feature = '{"type": "Feature","properties": {"Location": "' + values[i][17] + '", "Time": "' + new Date(values[i][0]) + '", "Quality": "'+values[i][18]+'"},"geometry": {"type": "Point","coordinates": ['+values[i][12]+','+values[i][11]+']}}';
 
 					 features.push(JSON.parse(feature));
 				}
@@ -64,7 +64,7 @@ function init() {
 				var map = new mapboxgl.Map({
 					container: 'map',
 					style: 'mapbox://styles/mapbox/streets-v11',
-					center: [-75.7046,45.4705],
+					center: [-75.68912, 45.40914],
 					zoom: 4,
 					maxZoom: 14,
 					minZoom: 12,
@@ -110,7 +110,9 @@ function init() {
 
 				// Create hover events so that when a user hover's over point (mouseenter), the popup appears.
 				map.on('mouseenter', 'sites', function(e) {
-					var text;
+					var text,
+						content;
+						
 					map.getCanvas().style.cursor = 'pointer';
 				
 					// Set popup text.
