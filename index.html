@@ -13,29 +13,20 @@
 	</head>
 	<body>
 		<div id='map'></div>
-		<div id="myExcelDiv" style="width: 100%; height: 100%; display: none;"></div>
+		<div id='legend'>
+			<h1>Air Quality</h1>
+			<p>Description of air quality definition</p>
+			<div class='row'>
+				<div><span style='background-color: #00C851'></span>Good</div>
+				<div><span style='background-color: #ff4444'></span>Bad</div>
+			</div>
+		</div>
+		<div id="myExcelDiv" style="display: none;"></div>
 		<!-- * This code uses the Microsoft Office Excel Javascript object model to programmatically insert the
 			 * Excel Web App into a div with id=myExcelDiv. The full API is documented at
 			 * https://msdn.microsoft.com/en-US/library/hh315812.aspx. There you can find out how to programmatically get
 			 * values from your Excel file and how to use the rest of the object model. -->
-		<script type="text/javascript" src="https://onedrive.live.com/embed?resid=8828CEB731568034%212229&authkey=%21AJkVY_irgSzp3dM&em=3&wdDivId=%22myExcelDiv%22&wdDownloadButton=1&wdHideGridlines=1&wdActiveCell=%22'Data'!A1%22&wdAllowInteractivity=0"></script>
-		<!-- <div class='map-overlay top'>
-			<div class='map-overlay-inner'>
-		        <h3><label id='year'>Date</label></h3>
-		        <input id='slider' type='range' min='0' max='19' step='1' value='0' />
-		        <h3 id='stats'></h3>
-		        <hr>
-		        <ul class='legend'><h3>Sites: </h3>
-		        	<li><span style='background-color: #C6BDB0'></span>A</li>
-		        	<li><span style='background-color: #635F58'></span>B</li>
-		        </ul>
-		        <ul class='legend'><h3>Air Quality: </h3>
-		        	<li><span style='border: 3px solid #1494A8'></span>range</li>
-		        	<li><span style='border: 3px solid #e04763'></span>range</li>
-		        </ul>
-		       	<p class='foot'>Data is accessible <a class='link' href='https://www.canada.ca/en/health-canada/topics/health-environment/water-quality-health/drinking-water/advisories-first-nations-south-60.html' target='_blank'>here</a>.</p>
-		    </div>
-		</div> -->
+		<script type="text/javascript" src="https://onedrive.live.com/embed?resid=A3A7FA929980B2CA%211001&authkey=%21AINkaElAzpksGuc&em=3&wdDivId=%22myExcelDiv%22&wdDownloadButton=1&wdHideGridlines=1&wdHideHeaders=1&wdAllowInteractivity=0"></script>
 		<script type='text/javascript' src='index.js'></script>	
 	</body>
 </html>

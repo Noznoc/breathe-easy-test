@@ -32,8 +32,9 @@ function init() {
 		// Get range for entire Data sheet
 		// TO DO: FIGURE OUT HOW TO GET THE ROW LENGTH SHOULD NOT HARD CODE (JULIA)
 		// var rows = ewa.getActiveWorkbook().getActiveSheet().getRowCount();
-		// console.log(rows);
-		var range = ewa.getActiveWorkbook().getActiveSheet().getRange(1,0,4,13);
+		// console.log(test);
+		// The getRange() function parameters: first row, first column, last row, last column. First starts at 0. 
+		var range = ewa.getActiveWorkbook().getActiveSheet().getRange(1,0,4,19); // IF MORE DATA IS ADDED, CHANGE 4 TO WHATEVER AMOUNT OF ROWS THERE IS!
 		
 		// Get values from range.
 		range.getValuesAsync(0,buildMap,range);
@@ -46,16 +47,17 @@ function init() {
 				// Get the array of range values from asyncResult.
 				var values = asyncResult.getReturnValue(),
 						features = [];
-				
+
 				// Loop through the array of range values and prepare each row into a feature. Each feature will then be added to an array of features that will be added into the map as a data source.
 				for (var i = 0; i < values.length; i++) {
 					 // TO DO: ADD OTHER DATA TO FEATURE FOR MAP (MELISSA)
 					 // Essentially add additional keys and values to the "properties" object. 
 					 // The following must be the structure of the object: "Column Name / Whatever you want to call it / Text to appear on the Map":"'+values[i][enter column number starting at 0 as column #1]+'".
-					 var feature = '{"type": "Feature","properties": {"Timestamp": "'+values[i][0]+'", "O3_V": "'+values[i][7]+'"},"geometry": {"type": "Point","coordinates": ['+values[i][12]+','+values[i][11]+']}}';
+					 var feature = '{"type": "Feature","properties": {"Time": "' + new Date(values[i][0]) + '", "Quality": "'+values[i][18]+'"},"geometry": {"type": "Point","coordinates": ['+values[i][12]+','+values[i][11]+']}}';
+
 					 features.push(JSON.parse(feature));
 				}
-				
+
 				// Create a map. Will have to add an accessToken that is specific for this project.
 				// TO DO: FIGURE OUT MAP TOKEN (JULIA)
 				mapboxgl.accessToken = 'pk.eyJ1IjoianVsY29ueiIsImEiOiJja2N0NGU3eGkwZGtqMnJxbGM0dXM4am50In0.mlekGyVVwR95ATKGkcISOg';
@@ -87,17 +89,24 @@ function init() {
 							'type': 'circle',
 							'source': 'data',
 							'paint': { // TO DO: ADD LOGIC TO MAKE POINTS COLOURED BASED ON A VALUE. TO BE DISCUSSED B/W MELISSA AND JULIA.
-							'circle-radius': 10,
-							'circle-color': '#007cbf'
+								'circle-radius': 12,
+								'circle-stroke-width': 0.3,
+								'circle-stroke-color': '#ccc',
+								'circle-color': [
+									'match',
+									['get', 'Quality'],
+									'good',
+									'#00C851',
+									'bad',
+									'#ff4444',
+									/* other */ '#ccc'
+								]
 							}
 						});
 				});
 				
 				// Initialize a popup for the map.
-				var popup = new mapboxgl.Popup({
-		        closeButton: false,
-		        closeOnClick: false
-		    });
+				var popup;
 
 				// Create hover events so that when a user hover's over point (mouseenter), the popup appears.
 				map.on('mouseenter', 'sites', function(e) {
@@ -105,11 +114,28 @@ function init() {
 					map.getCanvas().style.cursor = 'pointer';
 				
 					// Set popup text.
-					text = '<h2>' + e.features[0].properties.Timestamp + '</h2><h3>O3 (Volume)' + e.features[0].properties.O3_V + '</h3>';
+					content = '<h2>' + e.features[0].properties.Location + '</h2>';
+					
+					// Depending on the air quality type, make the colours of the popup different.
+					if (e.features[0].properties.Quality == 'good') {
+						content += '<h3 style="background-color: #00C851;">' + e.features[0].properties.Quality.toUpperCase() + '</h3>';
+					} else if (e.features[0].properties.Quality == 'bad') {
+						content += '<h3 style="background-color: #ff4444;">' + e.features[0].properties.Quality.toUpperCase() + '</h3>';
+					} else {
+						content += '<h3 style="background-color: #ccc;">' + e.features[0].properties.Quality.toUpperCase() + '</h3>';
+					}
+					
+					content += buildTable([e.features[0].properties.Time.toString()],['Date']);
+
+					popup = new mapboxgl.Popup({
+						 closeButton: false,
+						 closeOnClick: false,
+						 className: e.features[0].properties.Quality
+					});
 
 					// Populate popup content.
 					popup.setLngLat(e.features[0].geometry.coordinates)
-						.setHTML(text)
+						.setHTML(content)
 						.addTo(map);
 				});
 				
@@ -123,4 +149,14 @@ function init() {
 				alert('Operation failed with error message ' + asyncResult.getDescription() + '.');
 			}    
 	}
+}
+
+// Function that builds a table view of the specified variable names that should appear in the map point's popup.
+function buildTable(valArr, nameArr) {
+	var rows = '';
+	for (var i in valArr) {
+		rows += '<tr><td><strong>'+ nameArr[i]+':</strong></td><td>' + valArr[i] + '</td></tr>';
+	}
+	var tbl = '<table>' + rows + '</table>';
+	return tbl;
 }
