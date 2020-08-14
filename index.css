@@ -28,24 +28,33 @@ html, body {
 
 /* map popup */
 
-.mapboxgl-popup-content {
-  color: #252726;
-  text-align: center; }
-  
-  .mapboxgl-popup-content h3 {
-    color: white;
-    border-radius: 10px;
-  }
-  
-  .mapboxgl-popup-content .mapboxgl-popup-close-button {
-    color: #e04763; }
+.mapboxgl-popup {
+  max-width: 400px !important;
+  min-width: 300px;
+}
 
-.good .mapboxgl-popup-content {
+.mapboxgl-popup-content  {
+  color: #252726;
+  min-width: 50%;
+  font-size: 0.7rem; 
+}
+  
+.mapboxgl-popup-content h3 {
+  color: white;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.mapboxgl-popup-content .mapboxgl-popup-close-button {
+  color: #e04763; 
+}
+
+.low_risk .mapboxgl-popup-content {
   border-left: 3px solid #00C851;
   border-right: 3px solid #00C851;
 }
 
-.bad .mapboxgl-popup-content {
+.high_risk .mapboxgl-popup-content {
   border-left: 3px solid #ff4444;
   border-right: 3px solid #ff4444;
 }

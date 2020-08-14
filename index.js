@@ -34,7 +34,7 @@ function init() {
 		// var rows = ewa.getActiveWorkbook().getActiveSheet().getRowCount();
 		// console.log(test);
 		// The getRange() function parameters: first row, first column, last row, last column. First starts at 0. 
-		var range = ewa.getActiveWorkbook().getActiveSheet().getRange(1,0,4,19); // IF MORE DATA IS ADDED, CHANGE 4 TO WHATEVER AMOUNT OF ROWS THERE IS!
+		var range = ewa.getActiveWorkbook().getActiveSheet().getRange(1,0,6,23); // IF MORE DATA IS ADDED, CHANGE 4 TO WHATEVER AMOUNT OF ROWS THERE IS!
 		
 		// Get values from range.
 		range.getValuesAsync(0,buildMap,range);
@@ -46,15 +46,18 @@ function init() {
 				
 				// Get the array of range values from asyncResult.
 				var values = asyncResult.getReturnValue(),
+						test = asyncResult.getCode(),
 						features = [];
-
+					console.log(test)
 				// Loop through the array of range values and prepare each row into a feature. Each feature will then be added to an array of features that will be added into the map as a data source.
 				for (var i = 0; i < values.length; i++) {
 					 // TO DO: ADD OTHER DATA TO FEATURE FOR MAP (MELISSA)
 					 // Essentially add additional keys and values to the "properties" object. 
 					 // The following must be the structure of the object: "Column Name / Whatever you want to call it / Text to appear on the Map":"'+values[i][enter column number starting at 0 as column #1]+'".
-					 var feature = '{"type": "Feature","properties": {"Location": "' + values[i][17] + '", "Time": "' + new Date(values[i][0]) + '", "Quality": "'+values[i][18]+'"},"geometry": {"type": "Point","coordinates": ['+values[i][12]+','+values[i][11]+']}}';
-
+					 // TO DO: Add B-K columns
+					 // To DO: View data as table
+					 console.log(values[i][23])
+					 var feature = '{"type": "Feature","properties": {"Location": "' + values[i][22] + '", "Time": "' + new Date(values[i][0]) + '", "Quality": "'+ aqi(values[i][19]) +'", "Temp": "' + values[i][1] + '", "Humidity": "' + values[i][2] + '", "Particulate Matter 10.0 (ug/m^3)": "' + values[i][5] + '", "Ozone (ppb)": "' + values[i][6] + '"},"geometry": {"type": "Point","coordinates": ['+values[i][12]+','+values[i][11]+']}}';
 					 features.push(JSON.parse(feature));
 				}
 
@@ -65,15 +68,15 @@ function init() {
 					container: 'map',
 					style: 'mapbox://styles/mapbox/streets-v11',
 					center: [-75.68912, 45.40914],
-					zoom: 4,
+					zoom: 5,
 					maxZoom: 14,
-					minZoom: 12,
+					minZoom: 10,
 					hash: true,
 					maxBounds: [-168.39312,40.713956,-50.971241,83.359511] // TO DO: UPDATE THIS WITH JUST OTTAWA BOUNDS, NOT CANADA (JULIA/MELISSA)
 				});
 				
 				map.on('load', function(){
-					
+					console.log(features)
 					// Create data source to store the features that were collected from the Excel spreadsheet.
 					map.addSource('data', {
 						'type': 'geojson',
@@ -95,9 +98,9 @@ function init() {
 								'circle-color': [
 									'match',
 									['get', 'Quality'],
-									'good',
+									'Low Risk',
 									'#00C851',
-									'bad',
+									'High Risk',
 									'#ff4444',
 									/* other */ '#ccc'
 								]
@@ -119,20 +122,20 @@ function init() {
 					content = '<h2>' + e.features[0].properties.Location + '</h2>';
 					
 					// Depending on the air quality type, make the colours of the popup different.
-					if (e.features[0].properties.Quality == 'good') {
+					if (e.features[0].properties.Quality == 'Low Risk') {
 						content += '<h3 style="background-color: #00C851;">' + e.features[0].properties.Quality.toUpperCase() + '</h3>';
-					} else if (e.features[0].properties.Quality == 'bad') {
+					} else if (e.features[0].properties.Quality == 'High Risk') {
 						content += '<h3 style="background-color: #ff4444;">' + e.features[0].properties.Quality.toUpperCase() + '</h3>';
 					} else {
 						content += '<h3 style="background-color: #ccc;">' + e.features[0].properties.Quality.toUpperCase() + '</h3>';
 					}
 					
-					content += buildTable([e.features[0].properties.Time.toString()],['Date']);
+					content += buildTable([e.features[0].properties.Time.toString(), e.features[0].properties.Temp, e.features[0].properties.Humidity],['Date', 'Temperature (C)', 'Humidity (%)']);
 
 					popup = new mapboxgl.Popup({
 						 closeButton: false,
 						 closeOnClick: false,
-						 className: e.features[0].properties.Quality
+						 className: e.features[0].properties.Quality.split(' ').join('_').toLowerCase()
 					});
 
 					// Populate popup content.
@@ -150,6 +153,18 @@ function init() {
 			} else {
 				alert('Operation failed with error message ' + asyncResult.getDescription() + '.');
 			}    
+	}
+}
+
+function aqi(val) {
+	if (val <= 3) {
+		return "Low Risk";
+	} else if (val <= 6) {
+		return "Moderate Risk";
+	} else if (val <= 10) {
+		return "High Risk";
+	} else {
+		return "Very High Risk";
 	}
 }
 
