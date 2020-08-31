@@ -13,10 +13,23 @@ html, body {
 .link {
   text-decoration: none;
   color: #0099CC;
-  font-weight: bold; }
-  .link:hover {
-    text-decoration: underline;
-    cursor: pointer; }
+  font-weight: bold; 
+}
+.link:hover {
+  text-decoration: underline;
+  cursor: pointer; }
+
+.btn {
+  background-color: #0099CC;
+  border: 1px solid white;
+  border-radius: 10px;
+  padding: 0.5rem;
+  color: white;  
+}
+.btn:hover {
+  cursor: pointer;
+  background-color: #0d47a1;
+}
 
 /* map */
 
@@ -54,14 +67,19 @@ html, body {
   border-right: 3px solid #00C851;
 }
 
+.moderate_risk .mapboxgl-popup-content {
+  border-left: 3px solid #FF8800;
+  border-right: 3px solid #FF8800;
+}
+
 .high_risk .mapboxgl-popup-content {
   border-left: 3px solid #ff4444;
   border-right: 3px solid #ff4444;
 }
 
-.medium_risk .mapboxgl-popup-content {
-  border-left: 3px solid #FF8800;
-  border-right: 3px solid #FF8800;
+.very_high_risk .mapboxgl-popup-content {
+  border-left: 3px solid #CC0000;
+  border-right: 3px solid #CC0000;
 }
 
 .undefined .mapboxgl-popup-content {
@@ -80,6 +98,7 @@ html, body {
   position: absolute;
   left: 10px;
   z-index: 1;
+  max-width: 20%;
 }
 
 #legend h1 {

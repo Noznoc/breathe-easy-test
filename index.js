@@ -3,19 +3,33 @@ init();
 
 function init() {
 	
-	var features = [];
+	var features = [],
+		raw = [];
 	d3.csv('data_DUMMY.csv', function(row){
-		console.log(row["Type"] == "Average")
+		// only add average records onto the map
 		if (row["Type"] == "Average") {
-			 console.log(row)
-			 var feature = '{"type": "Feature","properties": {"Location": "' + row["Location"] + '", "Quality": "'+ row["AQ in map"] +'"},"geometry": {"type": "Point","coordinates": ['+row["Longitude[deg]"]+','+row["Latitude[deg]"]+']}}';
+			 var feature = '{"type": "Feature","properties": {"Location": "' + row["Location"] + '", "Quality": "'+ row["AQ in map"] +'", "Site": "'+ row["Site"] +'"},"geometry": {"type": "Point","coordinates": ['+row["Longitude[deg]"]+','+row["Latitude[deg]"]+']}}';
 			 features.push(JSON.parse(feature));
 		}
+		raw.push(row); 
 	});
-	console.log(features)
-	buildMap(features)
+
+	const geojson = {
+		'type': 'geojson',
+		'data': {
+			'type': 'FeatureCollection',
+			'features': features
+		}
+	};
+		
+	buildMap(geojson)
 	
-	function buildMap(features) {
+	// action for when user clicks the download data button. Run the downloadData function in src/download.js
+	$('#download').on('click', function(){
+		downloadData(features);
+	});
+	
+	function buildMap(geojson) {
 
 			// Create a map. Will have to add an accessToken that is specific for this project.
 			// TO DO: FIGURE OUT MAP TOKEN (JULIA)
@@ -34,13 +48,7 @@ function init() {
 			map.on('load', function(){
 				console.log(features)
 				// Create data source to store the features that were collected from the Excel spreadsheet.
-				map.addSource('data', {
-					'type': 'geojson',
-					'data': {
-						'type': 'FeatureCollection',
-						'features': features
-					}
-				});
+				map.addSource('data', geojson);
 				
 				// Add a new map layer from the above data source. This layer represents the sites.
 				map.addLayer({
@@ -49,8 +57,16 @@ function init() {
 						'source': 'data',
 						'paint': { // TO DO: ADD LOGIC TO MAKE POINTS COLOURED BASED ON A VALUE. TO BE DISCUSSED B/W MELISSA AND JULIA.
 							'circle-radius': 10, // change size of circle
-							'circle-stroke-width': 0.3, // outline colour
-							'circle-stroke-color': '#ccc',
+							'circle-stroke-width': 2, // outline colour
+							'circle-stroke-color': [
+								'match',
+								['get', 'Site'],
+								'Good',
+								'#000',
+								'Bad',
+								'#90a4ae',
+								/* other */ '#ccc'
+							],
 							'circle-color': [
 								'match',
 								['get', 'Quality'],
@@ -80,10 +96,12 @@ function init() {
 				// Depending on the air quality type, make the colours of the popup different.
 				if (e.features[0].properties.Quality == 'Low Risk') {
 					content += '<h3 style="background-color: #00C851;">' + e.features[0].properties.Quality.toUpperCase() + '</h3>';
-				} else if (e.features[0].properties.Quality == 'Medium Risk') {
+				} else if (e.features[0].properties.Quality == 'Moderate Risk') {
 					content += '<h3 style="background-color: #FF8800;">' + e.features[0].properties.Quality.toUpperCase() + '</h3>';
 				} else if (e.features[0].properties.Quality == 'High Risk') {
 					content += '<h3 style="background-color: #ff4444;">' + e.features[0].properties.Quality.toUpperCase() + '</h3>';
+				} else if (e.features[0].properties.Quality == 'Very High Risk') {
+					content += '<h3 style="background-color: #CC0000;">' + e.features[0].properties.Quality.toUpperCase() + '</h3>';
 				} else {
 					content += '<h3 style="background-color: #ccc;">' + e.features[0].properties.Quality.toUpperCase() + '</h3>';
 				}
