@@ -12,7 +12,7 @@ html, body {
 
 .link {
   text-decoration: none;
-  color: #e04763;
+  color: #0099CC;
   font-weight: bold; }
   .link:hover {
     text-decoration: underline;
@@ -57,6 +57,11 @@ html, body {
 .high_risk .mapboxgl-popup-content {
   border-left: 3px solid #ff4444;
   border-right: 3px solid #ff4444;
+}
+
+.medium_risk .mapboxgl-popup-content {
+  border-left: 3px solid #FF8800;
+  border-right: 3px solid #FF8800;
 }
 
 .undefined .mapboxgl-popup-content {

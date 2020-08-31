@@ -3,10 +3,16 @@ init();
 
 function init() {
 	
-	d3.csv('data_DUMMY.csv', function(data){
-		console.log(data)
+	var features = [];
+	d3.csv('data_DUMMY.csv', function(row){
+		console.log(row["Type"] == "Average")
+		if (row["Type"] == "Average") {
+			 console.log(row)
+			 var feature = '{"type": "Feature","properties": {"Location": "' + row["Location"] + '", "Quality": "'+ row["AQ in map"] +'"},"geometry": {"type": "Point","coordinates": ['+row["Longitude[deg]"]+','+row["Latitude[deg]"]+']}}';
+			 features.push(JSON.parse(feature));
+		}
 	});
-	
+	console.log(features)
 	buildMap(features)
 	
 	function buildMap(features) {
@@ -74,13 +80,15 @@ function init() {
 				// Depending on the air quality type, make the colours of the popup different.
 				if (e.features[0].properties.Quality == 'Low Risk') {
 					content += '<h3 style="background-color: #00C851;">' + e.features[0].properties.Quality.toUpperCase() + '</h3>';
+				} else if (e.features[0].properties.Quality == 'Medium Risk') {
+					content += '<h3 style="background-color: #FF8800;">' + e.features[0].properties.Quality.toUpperCase() + '</h3>';
 				} else if (e.features[0].properties.Quality == 'High Risk') {
 					content += '<h3 style="background-color: #ff4444;">' + e.features[0].properties.Quality.toUpperCase() + '</h3>';
 				} else {
 					content += '<h3 style="background-color: #ccc;">' + e.features[0].properties.Quality.toUpperCase() + '</h3>';
 				}
 				
-				content += buildTable([e.features[0].properties.Time.toString(), e.features[0].properties.Temp, e.features[0].properties.Humidity],['Date', 'Temperature (C)', 'Humidity (%)']);
+				//content += buildTable([e.features[0].properties.Time, e.features[0].properties.Temp, e.features[0].properties.Humidity],['Date', 'Temperature (C)', 'Humidity (%)']);
 
 				popup = new mapboxgl.Popup({
 					 closeButton: false,
@@ -100,18 +108,6 @@ function init() {
 				popup.remove();
 			});
 	}   
-}
-
-function aqi(val) {
-	if (val <= 3) {
-		return "Low Risk";
-	} else if (val <= 6) {
-		return "Moderate Risk";
-	} else if (val <= 10) {
-		return "High Risk";
-	} else {
-		return "Very High Risk";
-	}
 }
 
 // Function that builds a table view of the specified variable names that should appear in the map point's popup.
