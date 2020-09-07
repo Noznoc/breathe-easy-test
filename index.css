@@ -8,15 +8,35 @@ html, body {
   font-family: "Open Sans", sans-serif;
 }
 
+/* logo */
+#logo {
+  height: 7rem;
+  width: 15rem;
+  text-align: center;
+}
+
 /* anchor */
 
 .link {
   text-decoration: none;
-  color: #e04763;
-  font-weight: bold; }
-  .link:hover {
-    text-decoration: underline;
-    cursor: pointer; }
+  color: #0099CC;
+  font-weight: bold; 
+}
+.link:hover {
+  text-decoration: underline;
+  cursor: pointer; }
+
+.btn {
+  background-color: #0099CC;
+  border: 1px solid white;
+  border-radius: 10px;
+  padding: 0.5rem;
+  color: white;  
+}
+.btn:hover {
+  cursor: pointer;
+  background-color: #0d47a1;
+}
 
 /* map */
 
@@ -54,9 +74,19 @@ html, body {
   border-right: 3px solid #00C851;
 }
 
+.moderate_risk .mapboxgl-popup-content {
+  border-left: 3px solid #FF8800;
+  border-right: 3px solid #FF8800;
+}
+
 .high_risk .mapboxgl-popup-content {
   border-left: 3px solid #ff4444;
   border-right: 3px solid #ff4444;
+}
+
+.very_high_risk .mapboxgl-popup-content {
+  border-left: 3px solid #CC0000;
+  border-right: 3px solid #CC0000;
 }
 
 .undefined .mapboxgl-popup-content {
@@ -64,24 +94,66 @@ html, body {
   border-right: 3px solid #ccc;
 }
 
-/* map legend */
+/* map toggle */
 
-#legend {
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 3px;
+#toggle {
   top: 10px;
+  right: 10px;
+}
+
+#toggle select {
+  border: 1px solid #0099CC;
+  font-weight: 700;
+  color: white;
+  font-family: "Open Sans", sans-serif;
+  background: #0099CC;
+}
+
+#toggle select:hover, #toggle option:hover {
+  cursor: pointer;
+}
+
+#legend, #toggle {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   padding: 10px;
   position: absolute;
-  left: 10px;
   z-index: 1;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 3px;
+}
+
+/* map legend */
+
+#legend {
+  top: 10px;
+  left: 10px;
+  max-width: 20%;
+}
+
+/* legend on mobile view */
+@media only screen and (max-width: 800px) {
+  #legend {
+    max-width: 100%;
+    left: 0px;
+    top: inherit;
+    bottom: 0px;
+    height: 100px;
+    overflow-y: scroll;
+  }
+  
+  .mapboxgl-ctrl-bottom-right, .mapboxgl-ctrl-bottom-left {
+    bottom: 25%;
+  }
 }
 
 #legend h1 {
-  background-color: #0099CC;
-  color: white;
+  /* without logo */
+  /* background-color: #0099CC;
+  color: white; */
+  background-color: white;
   font-weight: 800;
   border-radius: 3px;
+  text-align: center;
 }
 
 #legend .row, #legend h1 {
@@ -98,7 +170,7 @@ html, body {
 #legend div span {
   border-radius: 50%;
   display: inline-block;
-  height: 10px;
+  height: 16px;
   margin-right: 5px;
-  width: 10px;
+  width: 16px;
 }

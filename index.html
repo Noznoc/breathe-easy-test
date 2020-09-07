@@ -4,29 +4,49 @@
 	    <title>Breathe Easy Ottawa</title>
 	    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />		
 	    <!-- Mapbox GL JS -->
-	    <script src='./src/mapbox-gl.js'></script>
-	    <link href='./src/mapbox-gl.css' rel='stylesheet' />
+	    <script src='./src/js/mapbox-gl.js'></script>
+	    <link href='./src/css/mapbox-gl.css' rel='stylesheet' />
 			<!-- Google Hosted jQuery -->
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+			<!-- D3 for reading csv -->
+			<script src='./src/js/d3.min.js'></script>
+			<!-- Download csv -->
+			<script src='./src/js/download.js'></script>
 			<!-- Stylesheet -->
 			<link href='index.css' rel='stylesheet' />
 	</head>
 	<body>
 		<div id='map'></div>
+		<div id='toggle'>
+			Select an air quality average to view on map:
+			<select>
+				<option value='total'>Total Average</option>
+				<option value='morning'>Morning Average</option>
+				<option value='afternoon'>Afternoon Average</option>
+				<option value='weekend'>Weekend Average</option>
+				<option value='weekday'>Weekday Average</option>
+			</select>
+		</div>
 		<div id='legend'>
-			<h1>Air Quality</h1>
-			<p>Description of air quality definition</p>
+			<h1><img id='logo' src='./src/img/Logo.png'/></h1>
+			<p>Description of air quality definition...</p>
 			<div class='row'>
-				<div><span style='background-color: #00C851'></span>Low Risk</div>
-				<div><span style='background-color: #ff4444'></span>High Risk</div>
+      	<div>Site A
+					<span style='border: 3px solid #000'></span> and Site B 
+      		<span style='border: 3px solid #90a4ae'></span>
+				</div>
+      </div>
+			<div class='row'>
+				Risk: 
+				<div><span style='background-color: #00C851'></span>Low</div>
+				<div><span style='background-color: #FF8800'></span>Moderate</div>
+				<div><span style='background-color: #ff4444'></span>High</div>
+				<div><span style='background-color: #CC0000'></span>Very High</div>
+			</div>
+			<div class='row'>
+				<button id="download" class="btn">Download DUMMY Data as CSV</button>
 			</div>
 		</div>
-		<div id="myExcelDiv" style="display: none;"></div>
-		<!-- * This code uses the Microsoft Office Excel Javascript object model to programmatically insert the
-			 * Excel Web App into a div with id=myExcelDiv. The full API is documented at
-			 * https://msdn.microsoft.com/en-US/library/hh315812.aspx. There you can find out how to programmatically get
-			 * values from your Excel file and how to use the rest of the object model. -->
-		<script type="text/javascript" src="https://onedrive.live.com/embed?resid=A3A7FA929980B2CA%211001&authkey=%21AINkaElAzpksGuc&em=3&wdDivId=%22myExcelDiv%22&wdDownloadButton=1&wdHideGridlines=1&wdHideHeaders=1&wdAllowInteractivity=0"></script>
 		<script type='text/javascript' src='index.js'></script>	
 	</body>
 </html>
