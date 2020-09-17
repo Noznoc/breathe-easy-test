@@ -1,6 +1,6 @@
 Interactive Map for [Ecology Ottawa's Breathe Easy Project](https://ecologyottawa.ca/campaigns/active-city/breatheeasy/).
 
-# Update Data
+# Data
 The data layers on the map are filtered based on the "Type" column in the `*.csv` file attached. **The following values must be entered in the "Type" column**:
 - "Total Average"
 - "Morning Average"
@@ -13,7 +13,7 @@ When uploading new data, the following columns also must be included:
 - "Location", with a neighbourhood name that represent the location of the site
 - "AQ_Map", with one of the following values: "Low Risk", "Moderate Risk", "High Risk", "Very High Risk"
 
-## Steps to Upddate
+## Update Data
 - With the xlsx copy, add data as desired, just make sure to have the above columns and value for the map
 - Save the xlsx as a csv
 - Open the csv in a text editor (e.g., Notepad)and copy the csv text
