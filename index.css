@@ -145,8 +145,15 @@ html, body {
     overflow-y: scroll;
   }
   
+  #toggle {
+    min-width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+  
   .mapboxgl-ctrl-bottom-right, .mapboxgl-ctrl-bottom-left {
-    bottom: 25%;
+    bottom: 20%;
   }
 }
 
