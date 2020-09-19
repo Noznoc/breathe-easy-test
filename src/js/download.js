@@ -10,12 +10,12 @@ function downloadData(data) {
   var csvData = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
   //IE11 & Edge
   if (navigator.msSaveBlob) {
-    navigator.msSaveBlob(csvData, 'breathe_easy_data_DUMMY.csv');
+    navigator.msSaveBlob(csvData, 'breathe_easy_data_20200919.csv');
   } else {
     //In FF link must be added to DOM to be clicked
     var link = document.createElement('a');
     link.href = window.URL.createObjectURL(csvData);
-    link.setAttribute('download', 'breathe_easy_data_DUMMY.csv');
+    link.setAttribute('download', 'breathe_easy_data_20200919.csv');
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
