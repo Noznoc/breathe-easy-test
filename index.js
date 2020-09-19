@@ -15,7 +15,7 @@ function init() {
 	var layers = ['total', 'morning', 'afternoon', 'weekday', 'weekend'];
 	
 	// Read data from the following spreadsheet. Update the file name to have the code read a different CSV file.
-	d3.csv('data_DUMMY.csv', function(row){
+	d3.csv('data_20200919.csv', function(row){
 		// The following if statements are used to prepare the CSV data into the correct GEOJSON format for the map. There is an if statement per each map data layer (each average category).
 		
 		// Add "Total Average" value as a map layer
@@ -47,10 +47,12 @@ function init() {
 			 var feature = '{"type": "Feature","properties": {"Location": "' + row["Location"] + '", "Quality": "'+ row["AQ_Map"] +'", "Site": "'+ row["Site"] +'"},"geometry": {"type": "Point","coordinates": ['+row["Longitude[deg]"]+','+row["Latitude[deg]"]+']}}';
 			 features_weekday.push(JSON.parse(feature));
 		}
-		
-		// Downloadable data.
-		var rawRow = '{"type": "Feature","properties": {"Type": "'+ row["Type"] +'", "Location": "' + row["Location"] + '", "Quality": "'+ row["AQ_Map"] +'", "Site": "'+ row["Site"] +'", "Longitude": "'+ row["Longitude[deg]"] +'", "Latitude": "'+ row["Latitude[deg]"] +'"}}';
-		raw.push(JSON.parse(rawRow)); 
+
+		if ((row["AQ_Map"].length > 0) && (row["Type"].length > 0) && (row["Type"] == "Weekday Average" || row["Type"] == "Weekend Average" || row["Type"] == "Total Average" || row["Type"] == "Morning Average" || row["Type"] == "Afternoon Average")) {
+			// Downloadable data.
+			var rawRow = '{"type": "Feature","properties": {"Type": "'+ row["Type"] +'", "Location": "' + row["Location"] + '", "Air Quality": "'+ row["AQ_Map"] +'", "Site": "'+ row["Site"] +'", "Longitude": "'+ row["Longitude[deg]"] + '", "Latitude": "'+ row["Latitude[deg]"] + '", "PM2.5[ug/m^3]": "' + row["PM2.5[ug/m^3]"] + '", "PM10.0[ug/m^3]": "' + row["PM10.0[ug/m^3]"] + '", "O3[ppb]": "' + row["O3[ppb]"] + '", "NO2[ppb]": "' + row["NO2[ppb]"] + '"}}';
+			raw.push(JSON.parse(rawRow)); 
+		}
 	});
 	
 	// Create a geojsons per each map layer's features
@@ -112,12 +114,12 @@ function init() {
 			var map = new mapboxgl.Map({
 				container: 'map',
 				style: 'mapbox://styles/mapbox/streets-v11',
-				center: [-75.68912, 45.40914],
-				zoom: 5,
+				center: [-75.68912, 45.40930],
+				zoom: 9,
 				maxZoom: 14,
-				minZoom: 10,
+				minZoom: 9,
 				hash: true,
-				maxBounds: [-168.39312,40.713956,-50.971241,83.359511]
+				maxBounds: [-76.239644,45.251700,-75.372410,45.535233]
 			});
 			
 			map.on('load', function(){
@@ -209,7 +211,7 @@ function init() {
 					map.getCanvas().style.cursor = 'pointer';
 				
 					// Set popup text.
-					content = '<h2>' + e.features[0].properties.Location + '</h2>';
+					content = '<h2>' + e.features[0].properties.Site + ': ' + e.features[0].properties.Location + '</h2>';
 					
 					// Depending on the air quality type, make the colours of the popup different.
 					if (e.features[0].properties.Quality == 'Low Risk') {
