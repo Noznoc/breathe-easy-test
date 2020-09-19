@@ -119,7 +119,7 @@ function init() {
 				maxZoom: 14,
 				minZoom: 9,
 				hash: true,
-				maxBounds: [-76.239644,45.251700,-75.372410,45.535233]
+				maxBounds: [-76.236191,45.209134,-75.368958,45.492871]
 			});
 			
 			map.on('load', function(){
