@@ -18,7 +18,7 @@
 	<body>
 		<div id='map'></div>
 		<div id='toggle'>
-			Select an air quality average to view on map:
+			<strong>Select an air quality average to view on map </strong>
 			<select>
 				<option value='total'>Total Average</option>
 				<option value='morning'>Morning Average</option>
@@ -28,8 +28,14 @@
 			</select>
 		</div>
 		<div id='legend'>
-			<h1><img id='logo' src='./src/img/Logo.png'/></h1>
-			<p>Description of air quality definition...</p>
+			<h1><img id='logo' alt='Ecology Ottawa Logo' src='./src/img/Logo.png'/></h1>
+			<div class='row'>
+				Risk: 
+				<div><span style='background-color: #00C851'></span>Low (1-3)</div>
+				<div><span style='background-color: #FF8800'></span>Moderate (4-6)</div>
+				<div><span style='background-color: #ff4444'></span>High (7-10)</div>
+				<div><span style='background-color: #CC0000'></span>Very High ( > 10)</div>
+			</div>
 			<div class='row'>
       	<div>Site A
 					<span style='border: 3px solid #000'></span> and Site B 
@@ -37,15 +43,11 @@
 				</div>
       </div>
 			<div class='row'>
-				Risk: 
-				<div><span style='background-color: #00C851'></span>Low</div>
-				<div><span style='background-color: #FF8800'></span>Moderate</div>
-				<div><span style='background-color: #ff4444'></span>High</div>
-				<div><span style='background-color: #CC0000'></span>Very High</div>
+				<div id="download" class="btn">Download Data as CSV</div>
 			</div>
-			<div class='row'>
-				<button id="download" class="btn">Download DUMMY Data as CSV</button>
-			</div>
+			<p>This map shows air quality data from 20 sites across Ottawa, split into Site A and Site B. Site A is typically away from roads, whereas Site B is typically closer, allowing for comparison. All sites were monitored 4 times between July to September: two weekdays and two weekends, which each have a morning and afternoon readings. This schedule allows for evaluation of differences in air quality between times of higher and lower traffic volumes, as well as differences with weather fluctuations. The map allows one to specify visualizing overall average, weekend or weekday averages, or morning or afternoon averages. Regular measurements were also taken from Ottawa’s Fletcher Wildlife Garden to capture regular air quality fluctuations in a non-trafficked area. All air quality monitoring was conducted by volunteers from across the city.</p>
+			<p>Air quality analysis is based on provincial standards for particulate matter, ozone and nitrogen (PM2.5, PM10, O3, NO2). Risk level is calculated from <a class='link' target='_blank' href='https://www.ontario.ca/document/air-quality-ontario-2016-report/air-quality-health-index-and-air-quality-alerts'>Ontario’s Air Quality Health Index (AQHI)</a>. Since data was not collected over 24 hours, the AQHI is based on the following: below Ontario standards = low risk; higher than standards but lwer than double = moderate risk; double = high risk; and beyond is very high risk. <a class='link' href='https://www.ontario.ca/page/air-quality-ontario' target='_blank'>Learn more about air quality in Ontario</a>, or their <a class='link' href='https://www.ontario.ca/page/ontarios-ambient-air-quality-criteria-sorted-contaminant-name' target='_blank'>"Ontario’s Ambient Air Quality Criteria - Sorted by Contaminant Name"</a>.</p>
+			<!-- <img id='logo' src='./src/img/on_aq.JPG'/> -->
 		</div>
 		<script type='text/javascript' src='index.js'></script>	
 	</body>
