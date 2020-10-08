@@ -111,17 +111,17 @@ function init() {
 			// Create a map. Will have to add an accessToken that is specific for this project.
 			// TO DO: FIGURE OUT MAP TOKEN (JULIA)
 			mapboxgl.accessToken = 'pk.eyJ1IjoianVsY29ueiIsImEiOiJja2N0NGU3eGkwZGtqMnJxbGM0dXM4am50In0.mlekGyVVwR95ATKGkcISOg';
+			
 			var map = new mapboxgl.Map({
 				container: 'map',
 				style: 'mapbox://styles/mapbox/streets-v11',
-				center: [-75.68912, 45.40930],
-				zoom: 9,
+				center: [-75.7940,45.4169],
+				zoom: 1,
 				maxZoom: 14,
-				minZoom: 9,
-				hash: true,
-				maxBounds: [-76.236191,45.209134,-75.368958,45.492871]
+				minZoom: 1,
+				maxBounds: [-76.2098,45.1225,-75.2565,45.6442]
 			});
-			
+
 			map.on('load', function(){
 
 				// Create data source to store the features that were collected from the Excel spreadsheet: total, weekend, weekday averages.
